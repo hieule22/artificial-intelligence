@@ -22,8 +22,8 @@ from informedSearch import *
 class EightPuzzleState(InformedProblemState):
     """
     Each state in the Eight Puzzle problem is characterized by a 2-dimensional
-    array representing the puzzle grid. The grid is filled with numbers with
-    the blank square denoted with a 0 value.
+    array representing the puzzle grid. The grid is filled with numbers from 0
+    to 9 with the blank square denoted with a 0 value.
     """
 
     def __init__(self, grid):
