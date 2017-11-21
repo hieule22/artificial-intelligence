@@ -377,146 +377,190 @@ def simscore(list1, list2):
     return (score, matchcount, totaldiff)
 
 def mycode():
-    # Read in the entire text of Flatland
-    flatland = open("flatland.txt").read()
+    # Read in the entire text of Bleak House.
+    bleakhouse = open("bleakhouse.txt").read()
     # Make a list of all the words that appear in order.
-    wordseqFlat = words(flatland)
+    wordseqBleak = words(bleakhouse)
     # Create a dictionary with a count for each word.
-    P1flat = UnigramTextModel(wordseqFlat)
+    P1bleak = UnigramTextModel(wordseqBleak)
     # Create a table with a count for each bigram (pair of words)
     # that can return all kinds of interesting information.
-    P2flat = NgramTextModel(2, wordseqFlat)
+    P2bleak = NgramTextModel(2, wordseqBleak)
     # Create a table with a count for each trigram (group of 3 words)
     # that can (again) return lots of interesting stuff.
-    P3flat = NgramTextModel(3, wordseqFlat)
+    P3bleak = NgramTextModel(3, wordseqBleak)
 
-    # Now do the same for Jane Austen's Sense and Sensibility
-    sense = open("sense.txt").read()
-    wordseqSense = words(sense)
-    P1sense = UnigramTextModel(wordseqSense)
-    P2sense = NgramTextModel(2, wordseqSense)
-    P3sense = NgramTextModel(3, wordseqSense)
+    # Now do the same for Wilkie Collins's The Moonstone.
+    moonstone = open("moonstone.txt").read()
+    wordseqMoon = words(moonstone)
+    P1moon = UnigramTextModel(wordseqMoon)
+    P2moon = NgramTextModel(2, wordseqMoon)
+    P3moon = NgramTextModel(3, wordseqMoon)
 
-    # Now do the same for a third (mystery) text.  Hint:  This is
-    # Jane Austen's Pride and Prejudice
-    pride = open("pride.txt").read()
-    wordseqPride = words(pride)
-    P1pride = UnigramTextModel(wordseqPride)
-    P2pride = NgramTextModel(2, wordseqPride)
+    # Now do the same for a third (mystery) text.
+    secret = open("secret.txt").read()
+    wordseqSecret = words(secret)
+    P1secret = UnigramTextModel(wordseqSecret)
+    P2secret = NgramTextModel(2, wordseqSecret)
 
     # This creates a list of the 10 most frequent individual
     # words in each document, then compares the lists using
     # a similarity metric.
-    flat1top = map((lambda x: x[1:][0]), P1flat.top(10))
-    sense1top = map((lambda x: x[1:][0]), P1sense.top(10))
-    pride1top = map((lambda x: x[1:][0]), P1pride.top(10))
-    F1vsP1 = simscore(flat1top, pride1top)
-    print "F1vsP1 simscore: " + str(F1vsP1)
-    S1vsP1 = simscore(sense1top, pride1top)
-    print "S1vsP1 simscore: " + str(S1vsP1)
+    bleak1top = map((lambda x: x[1:][0]), P1bleak.top(10))
+    moon1top = map((lambda x: x[1:][0]), P1moon.top(10))
+    secret1top = map((lambda x: x[1:][0]), P1secret.top(10))
+    B1vsS1 = simscore(bleak1top, secret1top)
+    print "B1vsS1 simscore: " + str(B1vsS1)
+    M1vsS1 = simscore(moon1top, secret1top)
+    print "M1vsS1 simscore: " + str(M1vsS1)
 
-    # This does the same as the above for the top  100 words, rather
+    # This creates a list of the 10 most frequent words in each document that
+    # are longer than 3 characters, then compares the lists using a similarity
+    # metric.
+    bleak1topcomplex = filter(lambda s: len(s) > 4, map(lambda x: x[1], P1bleak.top(1000)))[0:10]
+    moon1topcomplex = filter(lambda s: len(s) > 4, map(lambda x: x[1], P1moon.top(1000)))[0:10]
+    secret1topcomplex = filter(lambda s: len(s) > 4, map(lambda x: x[1], P1secret.top(1000)))[0:10]
+    print "Top 10 complex words from Bleak: " + str(bleak1topcomplex)
+    print "Top 10 complex words from Moon: " + str(moon1topcomplex)
+    print "Top 10 complex words from Secret: " + str(secret1topcomplex)
+    B1vsS1complex = simscore(bleak1topcomplex, secret1topcomplex)
+    print "B1vsS1 complex simscore: " + str(B1vsS1complex)
+    M1vsS1complex = simscore(moon1topcomplex, secret1topcomplex)
+    print "M1vsS1 complex simscore: " + str(M1vsS1complex)
+
+    # This does the same as the above for the top 100 words, rather
     # than the top 10 words.
-    flat1top100 = map((lambda x: x[1:][0]), P1flat.top(100))
-    sense1top100 = map((lambda x: x[1:][0]), P1sense.top(100))
-    pride1top100 = map((lambda x: x[1:][0]), P1pride.top(100))
-    F1100vsP1100 = simscore(flat1top100, pride1top100)
-    print "F1100vsP1100 simscore: " + str(F1100vsP1100)
-    S1100vsP1100 = simscore(sense1top100, pride1top100)
-    print "S1100vsP1100 simscore: " + str(S1100vsP1100)
+    bleak1top100 = map((lambda x: x[1:][0]), P1bleak.top(100))
+    moon1top100 = map((lambda x: x[1:][0]), P1moon.top(100))
+    secret1top100 = map((lambda x: x[1:][0]), P1secret.top(100))
+    B1100vsS1100 = simscore(bleak1top100, secret1top100)
+    print "B1100vsS1100 simscore: " + str(B1100vsS1100)
+    M1100vsS1100 = simscore(moon1top100, secret1top100)
+    print "M1100vsS1100 simscore: " + str(M1100vsS1100)
 
     # This does the same, for the top 10 bigrams in each text.
-    flat2top = map((lambda x: x[1:][0]), P2flat.top(10))
-    sense2top = map((lambda x: x[1:][0]), P2sense.top(10))
-    pride2top = map((lambda x: x[1:][0]), P2pride.top(10))
-    F2vsP2 = simscore(flat2top, pride2top)
-    print "F2vsP2 simscore: " + str(F2vsP2)
-    S2vsP2 = simscore(sense2top, pride2top)
-    print "S2vsP2 simscore: " + str(S2vsP2)
+    bleak2top = map((lambda x: x[1:][0]), P2bleak.top(10))
+    moon2top = map((lambda x: x[1:][0]), P2moon.top(10))
+    secret2top = map((lambda x: x[1:][0]), P2secret.top(10))
+    print "Bleak top 10 bigrams " + str(bleak2top)
+    print "Moon top 10 bigrams " + str(moon2top)
+    print "Secret top 10 bigrams " + str(secret2top)
+
+    B2vsS2 = simscore(bleak2top, secret2top)
+    print "B2vsS2 simscore: " + str(B2vsS2)
+    M2vsS2 = simscore(moon2top, secret2top)
+    print "M2vsS2 simscore: " + str(M2vsS2)
 
     # Same again for the top 100 bigrams.
-    flat2top100 = map((lambda x: x[1:][0]), P2flat.top(100))
-    sense2top100 = map((lambda x: x[1:][0]), P2sense.top(100))
-    pride2top100 = map((lambda x: x[1:][0]), P2pride.top(100))
-    F2100vsP2100 = simscore(flat2top100, pride2top100)
-    print "F2100vsP2100 simscore: " + str(F2100vsP2100)
-    S2100vsP2100 = simscore(sense2top100, pride2top100)
-    print "S2100vsP2100 simscore: " + str(S2100vsP2100)
+    bleak2top100 = map((lambda x: x[1:][0]), P2bleak.top(100))
+    moon2top100 = map((lambda x: x[1:][0]), P2moon.top(100))
+    secret2top100 = map((lambda x: x[1:][0]), P2secret.top(100))
+    B2100vsS2100 = simscore(bleak2top100, secret2top100)
+    print "B2100vsS2100 simscore: " + str(B2100vsS2100)
+    M2100vsS2100 = simscore(moon2top100, secret2top100)
+    print "M2100vsS2100 simscore: " + str(M2100vsS2100)
 
 
     # This prints a bunch of interesting statistical information
     # out to the screen.
-    flatprob = 0
-    senseprob = 0
-    flatcount = 0
-    sensecount = 0
-    pridetotalwords = len(wordseqPride)
-    print "Flat the prob: " + str(P1flat['the'])
-    print "Sense the prob: " + str(P1sense['the'])
-    print "Pride the prob: " + str(P1pride['the'])
-    print "Flat word count: " + str(len(wordseqFlat))
-    print "Sense word count: " + str(len(wordseqSense))
-    print "Pride word count: " + str(len(wordseqPride))
-    print "Flat top 10: " + str(P1flat.top(10))
-    print "Sense top 10: " + str(P1sense.top(10))
-    print "Pride top 10: " + str(P1pride.top(10))
+    bleakprob = 0
+    moonprob = 0
+    bleakcount = 0
+    mooncount = 0
+    secrettotalwords = len(wordseqSecret)
+    print "Bleak the prob: " + str(P1bleak['the'])
+    print "Moon the prob: " + str(P1moon['the'])
+    print "Secret the prob: " + str(P1secret['the'])
+    print "Bleak that prob: " + str(P1bleak['that'])
+    print "Moon that prob: " + str(P1moon['that'])
+    print "Secret that prob: " + str(P1secret['that'])
+    print "Bleak and prob: " + str(P1bleak['and'])
+    print "Moon and prob: " + str(P1moon['and'])
+    print "Secret and prob: " + str(P1secret['and'])
+    print "Bleak which prob: " + str(P1bleak['which'])
+    print "Moon which prob: " + str(P1moon['which'])
+    print "Secret which prob: " + str(P1secret['which'])
+    print "Bleak who prob: " + str(P1bleak['who'])
+    print "Moon who prob: " + str(P1moon['who'])
+    print "Secret who prob: " + str(P1secret['who'])
+    print "Bleak they prob: " + str(P1bleak['they'])
+    print "Moon they prob: " + str(P1moon['they'])
+    print "Secret they prob: " + str(P1secret['they'])
+    print "Bleak to prob: " + str(P1bleak['to'])
+    print "Moon to prob: " + str(P1moon['to'])
+    print "Secret to prob: " + str(P1secret['to'])
+    print "Bleak of prob: " + str(P1bleak['of'])
+    print "Moon of prob: " + str(P1moon['of'])
+    print "Secret of prob: " + str(P1secret['of'])
+    print "Bleak in prob: " + str(P1bleak['in'])
+    print "Moon in prob: " + str(P1moon['in'])
+    print "Secret in prob: " + str(P1secret['in'])
 
-    # This goes through each word in Pride, notes how likely that word
+    print "Bleak word count: " + str(len(wordseqBleak))
+    print "Moon word count: " + str(len(wordseqMoon))
+    print "Secret word count: " + str(len(wordseqSecret))
+    print "Bleak top 10: " + str(P1bleak.top(10))
+    print "Moon top 10: " + str(P1moon.top(10))
+    print "Secret top 10: " + str(P1secret.top(10))
+
+    # This goes through each word in secret text, notes how likely that word
     # is in one of the other texts and keeps a running total.
-    # It also just counts the number of words in Pride that appear in
+    # It also just counts the number of words in secret text that appear in
     # the other texts.
-    for word in wordseqPride:
-        p1wordflat = P1flat[word]
-        p1wordsense = P1sense[word]
-        if p1wordflat > 0:
-            flatcount += 1
-        flatprob = flatprob + p1wordflat
-        if p1wordsense > 0:
-            sensecount += 1
-        senseprob = senseprob + p1wordsense
-        # print "word: " + word + " wordprob: " + str(p1wordsense) + " senseprob: " + str(senseprob)        
-    print "Flat probability is: " + str(flatprob)
-    print "Sense probability is: " + str(senseprob)
-    print "Flat count and prob are: " + str(flatcount) + " " + str(flatcount/float(pridetotalwords))
-    print "Sense count and prob are: " + str(sensecount) + " " + str(sensecount/float(pridetotalwords))
+    for word in wordseqSecret:
+        p1wordbleak = P1bleak[word]
+        p1wordmoon = P1moon[word]
+        if p1wordbleak > 0:
+            bleakcount += 1
+        bleakprob = bleakprob + p1wordbleak
+        if p1wordmoon > 0:
+            mooncount += 1
+        moonprob = moonprob + p1wordmoon
+        # print "word: " + word + " wordprob: " + str(p1wordmoon) + " moonprob: " + str(moonprob)
+    print "Bleak probability is: " + str(bleakprob)
+    print "Moon probability is: " + str(moonprob)
+    print "Bleak count and prob are: " + str(bleakcount) + " " + str(bleakcount/float(secrettotalwords))
+    print "Moon count and prob are: " + str(mooncount) + " " + str(mooncount/float(secrettotalwords))
 
     # This does the same kind of thing as above with bigrams.
-    flat2prob = 0
-    sense2prob = 0
-    flat2count = 0
-    sense2count = 0
-    for index in xrange(1, len(wordseqPride)):
-        p2wordsflat = P2flat[wordseqPride[index-1],wordseqPride[index]]
-        p2wordssense = P2sense[wordseqPride[index-1],wordseqPride[index]]
-        if p2wordsflat > 0:
-            flat2count +=1
-        flat2prob = flat2prob + p2wordsflat
-        if p2wordssense > 0:
-            sense2count +=1
-        sense2prob = sense2prob + p2wordssense
-    print "Flat bigram prob is: " + str(flat2prob)
-    print "Sense bigram prob is: " + str(sense2prob)
-    print "Flat bigram count and prob are: " + str(flat2count) + " " + str(flat2count/float(pridetotalwords))
-    print "Sense bigram count and prob are: " + str(sense2count) + " " + str(sense2count/float(pridetotalwords))
+    bleak2prob = 0
+    moon2prob = 0
+    bleak2count = 0
+    moon2count = 0
+    for index in xrange(1, len(wordseqSecret)):
+        p2wordsbleak = P2bleak[wordseqSecret[index-1],wordseqSecret[index]]
+        p2wordsmoon = P2moon[wordseqSecret[index-1],wordseqSecret[index]]
+        if p2wordsbleak > 0:
+            bleak2count +=1
+        bleak2prob = bleak2prob + p2wordsbleak
+        if p2wordsmoon > 0:
+            moon2count +=1
+        moon2prob = moon2prob + p2wordsmoon
+    print "Bleak bigram prob is: " + str(bleak2prob)
+    print "Moon bigram prob is: " + str(moon2prob)
+    print "Bleak bigram count and prob are: " + str(bleak2count) + " " + str(bleak2count/float(secrettotalwords))
+    print "Moon bigram count and prob are: " + str(moon2count) + " " + str(moon2count/float(secrettotalwords))
 
     # The same thing yet again with trigrams.
-    flat3prob = 0
-    sense3prob = 0
-    flat3count = 0
-    sense3count = 0
-    for index in xrange(2, len(wordseqPride)):
-        p3wordsflat = P3flat[wordseqPride[index-2],wordseqPride[index-1],wordseqPride[index]]
-        p3wordssense = P3sense[wordseqPride[index-2],wordseqPride[index-1],wordseqPride[index]]
-        if p3wordsflat > 0:
-            flat3count +=1
-        flat3prob = flat3prob + p3wordsflat
-        if p3wordssense > 0:
-            sense3count +=1
-        sense3prob = sense3prob + p3wordssense
-    print "Flat trigram prob is: " + str(flat3prob)
-    print "Sense trigram prob is: " + str(sense3prob)
-    print "Flat trigram count and prob are: " + str(flat3count) + " " + str(flat3count/float(pridetotalwords))
-    print "Sense trigram count and prob are: " + str(sense3count) + " " + str(sense3count/float(pridetotalwords))
+    bleak3prob = 0
+    moon3prob = 0
+    bleak3count = 0
+    moon3count = 0
+    for index in xrange(2, len(wordseqSecret)):
+        p3wordsbleak = P3bleak[wordseqSecret[index-2],wordseqSecret[index-1],wordseqSecret[index]]
+        p3wordsmoon = P3moon[wordseqSecret[index-2],wordseqSecret[index-1],wordseqSecret[index]]
+        if p3wordsbleak > 0:
+            bleak3count +=1
+        bleak3prob = bleak3prob + p3wordsbleak
+        if p3wordsmoon > 0:
+            moon3count +=1
+        moon3prob = moon3prob + p3wordsmoon
+    print "Bleak trigram prob is: " + str(bleak3prob)
+    print "Moon trigram prob is: " + str(moon3prob)
+    print "Bleak trigram count and prob are: " + str(bleak3count) + " " + str(bleak3count/float(secrettotalwords))
+    print "Moon trigram count and prob are: " + str(moon3count) + " " + str(moon3count/float(secrettotalwords))
+
+mycode()
 
 __doc__ += """
 ## Create a Unigram text model from the words in the book "Flatland".
@@ -524,7 +568,7 @@ __doc__ += """
 >>> wordseq = words(flatland)
 >>> P = UnigramTextModel(wordseq)
 
-## Now do segmentation, using the text model as a prior.
+    ## Now do segmentation, using the text model as a prior.
 >>> s, p = viterbi_segment('itiseasytoreadwordswithoutspaces', P) 
 >>> s 
 ['it', 'is', 'easy', 'to', 'read', 'words', 'without', 'spaces']
