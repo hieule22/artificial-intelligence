@@ -378,7 +378,7 @@ def simscore(list1, list2):
 
 def mycode():
     # Read in the entire text of Bleak House.
-    bleakhouse = open("bleakhouse.txt").read()
+    bleakhouse = open("docs/bleakhouse.txt").read()
     # Make a list of all the words that appear in order.
     wordseqBleak = words(bleakhouse)
     # Create a dictionary with a count for each word.
@@ -391,14 +391,14 @@ def mycode():
     P3bleak = NgramTextModel(3, wordseqBleak)
 
     # Now do the same for Wilkie Collins's The Moonstone.
-    moonstone = open("moonstone.txt").read()
+    moonstone = open("docs/moonstone.txt").read()
     wordseqMoon = words(moonstone)
     P1moon = UnigramTextModel(wordseqMoon)
     P2moon = NgramTextModel(2, wordseqMoon)
     P3moon = NgramTextModel(3, wordseqMoon)
 
     # Now do the same for a third (mystery) text.
-    secret = open("secret.txt").read()
+    secret = open("docs/secret.txt").read()
     wordseqSecret = words(secret)
     P1secret = UnigramTextModel(wordseqSecret)
     P2secret = NgramTextModel(2, wordseqSecret)
